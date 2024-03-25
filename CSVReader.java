@@ -10,15 +10,14 @@ public class CSVReader {
 	public static String[] fields (String record_line) throws Exception {
 		
 		String[] fields = null;
-		int nbFields = 0;
+		int nbFields = 1;
 		boolean missingQuote = false;
 		boolean hasQuotes = false;
 		
 		for (int i =0; i < record_line.length(); i++ ) {
 			
-			if (record_line.charAt(i) == '"') {
+			if (record_line.charAt(i) == '\"') {
 				missingQuote = !missingQuote;
-				hasQuotes = true;
 				continue;
 			}
 			
@@ -40,12 +39,11 @@ public class CSVReader {
 		
 		
 		
-		fields = new String [10];
-		
+		fields = new String [nbFields];
 		
 		int currentField=0;
 		fields[0] = "";
-		
+		/*
 		if (hasQuotes) {
 			String[] midPoint = record_line.split("\"");
 			fields[0] = midPoint[0].substring(0, midPoint.length-1);
@@ -54,7 +52,7 @@ public class CSVReader {
 		}
 		
 		System.out.print(fields.toString());
-		
+		*/
 		for( int i = 0; i< record_line.length(); i++) {
 			if (record_line.charAt(i)== '\"') {
 				hasQuotes = !hasQuotes;
@@ -65,6 +63,10 @@ public class CSVReader {
 				fields[currentField] = fields [currentField].trim();
 				currentField++;
 				
+				if(currentField == 10) {
+					return fields;
+				}
+				
 				fields[currentField] = "";
 				continue;
 				
@@ -74,7 +76,9 @@ public class CSVReader {
 			
 		}
 		
-		System.out.println(fields);
+		System.out.println(Arrays.toString(fields));
+		System.out.println(fields.length);
+		System.out.println(fields[1]);
 		return fields;
 	
 	}
