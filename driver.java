@@ -4,6 +4,10 @@ import java.io.FileWriter;
 import java.util.Scanner;
 
 public class driver {
+    public static Movie lineReader(String[] aString) throws BadDurationException, BadGenreException, BadNameException, BadRatingException,  {
+        return new Movie();
+
+    }
 
     public static void CSVReader(String fileName) {
 
@@ -17,14 +21,12 @@ public class driver {
                 String[] columns = line.split(",");
                 try {
                     int col1 = Integer.valueOf(columns[0]);
-                    if (col1 < 1990 || col1 > 1999){
+                    if (col1 < 1990 || col1 > 1999) {
 
                     }
-                } catch (NumberFormatException e) {}
-                
+                } catch (NumberFormatException e) {
+                }
 
-                if (col1))
-                
                 String col2 = columns[1];
                 String col3 = columns[2];
 
