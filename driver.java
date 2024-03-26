@@ -118,8 +118,11 @@ public class driver {
         // aStrings[0].trim().length()==0? for each?
         
         try {
-            if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
-                throw new BadYearException();
+            if (aStrings[0].trim().length() == 0) {
+                throw new BadYearException("Invalid Year. Missing the Year in the field");
+            } 
+            else if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
+                throw new BadYearException(");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
