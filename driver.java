@@ -105,7 +105,7 @@ public class driver {
     }
 
     public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
-            BadRatingException, BadScoreException, BadYearException, BadTittleException, Exception {
+            BadRatingException, BadScoreException, BadYearException, BadTitleException, Exception {
 
         String [] movieGenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror", "action", "documentary", "fantasy", "mystery",
     			"sci-fi", "family", "western", "romance", "thriller"};
@@ -123,7 +123,7 @@ public class driver {
         }
         //---------------------------------
         if (aStrings[1].trim().length() == 0) {
-            throw new BadTittleException();
+            throw new BadTitleException();
         }
 
         //---------------------------------------
