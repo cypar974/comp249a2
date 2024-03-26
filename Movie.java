@@ -42,6 +42,19 @@ public class Movie implements Serializable {
 
 	}
 
+	public Movie(String[] movieInfo) {
+		this.year = Integer.parseInt(movieInfo[0]);
+		this.title = movieInfo[1];
+		this.duration = Integer.parseInt(movieInfo[2]);
+		this.genre = movieInfo[3];
+		this.rating = movieInfo[4];
+		this.score = Double.parseDouble(movieInfo[5]);
+		this.director = movieInfo[6];
+		this.actor1 = movieInfo[7];
+		this.actor2 = movieInfo[8];
+		this.actor3 = movieInfo[9];
+	}
+
 	// Copy constructor
 	public Movie(Movie objMovie) {
 		this.year = objMovie.year;

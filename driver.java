@@ -1,41 +1,162 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
+import java.util.Arrays;
 
 public class driver {
-    public static Movie lineReader(String[] aString) throws BadDurationException, BadGenreException, BadNameException, BadRatingException,  {
+    public static String[] fields2(String record_line) throws Exception {
+        boolean hasInvComa = false;
+        for (int i = 0; i < record_line.length(); i++) {
+            if (record_line.charAt(i) == '"') {
+                hasInvComa = true;
+                break;
+            }
+        }
+        if (hasInvComa) {
+            return fields(record_line);
+        } else {
+            String[] fields = record_line.split(",");
+
+            // Check if the number of fields is exactly 10
+            if (fields.length != 10) {
+                if (fields.length < 10) {
+                    throw new MissingFieldsException();
+                } else {
+                    throw new ExcessFieldsException();
+                }
+            }
+
+            // Return the fields array
+            return fields;
+        }
+
+    }
+
+    public static String[] fields(String record_line) throws Exception {
+        if (record_line.endsWith(",")) {
+            record_line = record_line.substring(0, record_line.length() - 1);
+        }
+        String[] fields = null;
+        int nbFields = 1;
+        boolean missingQuote = false;
+        boolean hasQuotes = false;
+
+        for (int i = 0; i < record_line.length(); i++) {
+
+            if (record_line.charAt(i) == '"') {
+                missingQuote = !missingQuote;
+                continue;
+            }
+
+            if (record_line.charAt(i) == ',' && !missingQuote) {
+                nbFields++;
+            }
+        }
+
+        if (missingQuote) {
+            throw new MissingQuotesException();
+        }
+
+        if (nbFields < 10) {
+            throw new MissingFieldsException();
+        } else if (nbFields > 10) {
+            throw new ExcessFieldsException();
+        }
+
+        fields = new String[nbFields];
+
+        int currentField = 0;
+        fields[0] = "";
+
+        for (int i = 0; i < record_line.length(); i++) {
+            if (record_line.charAt(i) == '"') {
+                hasQuotes = !hasQuotes;
+                continue;
+            }
+
+            if (record_line.charAt(i) == ',' && !hasQuotes) {
+                fields[currentField] = fields[currentField].trim();
+                currentField++;
+
+                if (currentField == 10) {
+                    return fields;
+                }
+
+                fields[currentField] = "";
+                continue;
+
+            }
+
+            fields[currentField] += record_line.charAt(i);
+
+        }
+
+        return fields;
+
+    }
+
+    public static Movie lineReader(String[] aString)
+            throws BadDurationException, BadGenreException, BadNameException, BadRatingException, Exception {
         return new Movie();
+    }
+
+    public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
+            BadRatingException, BadScoreException, BadYearException, BadTittleException, Exception {
+
+        try {
+            if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
+                throw new BadYearException();
+            }
+            if (Integer.parseInt(aStrings[2]) < 30 || Integer.parseInt(aStrings[2]) > 300) {
+                throw new BadDurationException();
+            }
+        } catch (NumberFormatException e) {
+            throw new Exception(e.getMessage());
+        }
+
+        if (aStrings[1].trim().length() == 0) {
+            throw new BadTittleException();
+        }
+
+        try {
+
+        } catch (NumberFormatException e) {
+            throw new BadDurationException();
+        }
 
     }
 
     public static void CSVReader(String fileName) {
-
         try {
-            // Create a Scanner object to read from the file
             Scanner scanner = new Scanner(new File(fileName));
-            FileWriter writer = new FileWriter("bad_movie_record.txt", true);
-            // Read each line from the file
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                String[] columns = line.split(",");
                 try {
-                    int col1 = Integer.valueOf(columns[0]);
-                    if (col1 < 1990 || col1 > 1999) {
+                    String[] a = fields2(line);
+                    movieChecker(a);
+                    // PUT TO THE CORRESPONDING FILE
 
+                } catch (Exception e) {
+                    System.out.println(
+                            "------------------------------------\n\r" + e
+                                    + "\n\r------------------------------------\n\r");
+                    try {
+                        PrintWriter badFileWriter = new PrintWriter(new FileOutputStream("bad.txt", true));
+                        badFileWriter.println(line);
+                        badFileWriter.close();
+                    } catch (IOException ex) {
+                        System.err.println("Error writing to bad.txt: " + ex.getMessage());
                     }
-                } catch (NumberFormatException e) {
                 }
 
-                String col2 = columns[1];
-                String col3 = columns[2];
-
             }
-
-            // Close the scanner when done
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.err.println("File not found: " + e.getMessage());
+            System.out.println("File not found:" + e.getMessage());
         }
     }
 
