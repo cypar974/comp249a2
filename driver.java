@@ -177,7 +177,7 @@ public class driver {
             }
         }
         if(invalidRating){
-            throw new BadRatingException();
+            throw new BadRatingException("Invalid Rating. Rating is misspelled.");
         }
         //--------------------------------------------
         try {  
