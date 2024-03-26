@@ -107,80 +107,80 @@ public class driver {
     public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
             BadRatingException, BadScoreException, BadYearException, BadTitleException, Exception {
 
-        String [] movieGenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror", "action", "documentary", "fantasy", "mystery",
-    			"sci-fi", "family", "western", "romance", "thriller"};
+        String[] movieGenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror",
+                "action", "documentary", "fantasy", "mystery",
+                "sci-fi", "family", "western", "romance", "thriller" };
 
-        String [] movieRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
+        String[] movieRatings = { "PG", "Unrated", "G", "R", "PG-13", "NC-17" };
 
-        //------------------------------
+        // ------------------------------
         // Do we need to add something that verifies if each field is empty?
         // like
         // aStrings[0].trim().length()==0? for each?
-        
+
         try {
             if (aStrings[0].trim().length() == 0) {
                 throw new BadYearException("Invalid Year. Missing the Year in the field");
-            } 
-            else if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
+            } else if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
                 throw new BadYearException("Invalid Year. Year must be from 1990 through 1999");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
 
         }
-        //---------------------------------
+        // ---------------------------------
         if (aStrings[1].trim().length() == 0) {
             throw new BadTitleException("Invalid Title. Missing the Title in the field");
         }
 
-        //---------------------------------------
-        try {  
+        // ---------------------------------------
+        try {
             if (aStrings[2].trim().length() == 0) {
                 throw new BadDurationException("Invalid Duration. Missing the Duration in the field");
-            } 
-            else if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
-                throw new BadDurationException("Invalid Duration. Duration should be between between 30 minutes to 300 minutes");
+            } else if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
+                throw new BadDurationException(
+                        "Invalid Duration. Duration should be between between 30 minutes to 300 minutes");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
         }
 
-        //----------------------------------------
+        // ----------------------------------------
         if (aStrings[3].trim().length() == 0) {
             throw new BadTitleException("Invalid Genre. Missing the Genre in the field");
         }
-        
+
         boolean invalidGenre = true;
-        for (String genre: movieGenres) {
-        	if (aStrings[3].equals(genre)) {
-        		
-        		invalidGenre = false;
-        		break;
-        		
-        	}
+        for (String genre : movieGenres) {
+            if (aStrings[3].equals(genre)) {
+
+                invalidGenre = false;
+                break;
+
+            }
         }
-         //
+        //
         if (invalidGenre) {
-        	throw new BadGenreException("Invalid Genre. Genre is misspelled");
+            throw new BadGenreException("Invalid Genre. Genre is misspelled");
         }
 
-        //---------------------------------------------
+        // ---------------------------------------------
         if (aStrings[4].trim().length() == 0) {
             throw new BadRatingException("Invalid Rating. Missing the Rating in the field");
         }
-        
+
         boolean invalidRating = true;
-        for( String rating: movieRatings) {
-            if (aStrings[4].equals(rating)){
+        for (String rating : movieRatings) {
+            if (aStrings[4].equals(rating)) {
                 invalidRating = false;
                 break;
             }
         }
-        if(invalidRating){
+        if (invalidRating) {
             throw new BadRatingException("Invalid Rating. Rating is misspelled.");
         }
-        //--------------------------------------------
-        try {  
+        // --------------------------------------------
+        try {
             if (Double.parseDouble(aStrings[5]) < 10.0 && Double.parseDouble(aStrings[5]) > 0.0) {
                 throw new BadDurationException();
             }
@@ -188,20 +188,21 @@ public class driver {
             throw new Exception(e.getMessage());
         }
 
-        //------------------------------------------------
+        // ------------------------------------------------
 
-        for (int i = 7; i < aStrings.length; i++){
+        for (int i = 7; i < aStrings.length; i++) {
             if (aStrings[i].trim().length() == 0) {
-            throw new BadNameException("Invalid Actor Name. No Actor name in the field.");
+                throw new BadNameException("Invalid Actor Name. No Actor name in the field.");
+            }
+
         }
-            
-        }
-    
-       //----------------------------------------------------
+
+        // ----------------------------------------------------
 
     }
 
     public static void CSVReader(String fileName) {
+        System.out.println("asdsda");
         try {
             Scanner scanner = new Scanner(new File(fileName));
             while (scanner.hasNextLine()) {
