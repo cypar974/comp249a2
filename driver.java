@@ -107,10 +107,24 @@ public class driver {
     public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
             BadRatingException, BadScoreException, BadYearException, BadTittleException, Exception {
 
+        String [] moviegenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror", "action", "documentary", "fantasy", "mystery",
+    			"sci-fi", "family", "western", "romance", "thriller"};
+
+        String [] movieRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
+        
         try {
             if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
                 throw new BadYearException();
             }
+        } catch (NumberFormatException e) {
+            throw new Exception(e.getMessage());
+
+        }
+        if (aStrings[1].trim().length() == 0) {
+            throw new BadTittleException();
+        }
+        
+        try {  
             if (Integer.parseInt(aStrings[2]) < 30 || Integer.parseInt(aStrings[2]) > 300) {
                 throw new BadDurationException();
             }
@@ -118,15 +132,22 @@ public class driver {
             throw new Exception(e.getMessage());
         }
 
-        if (aStrings[1].trim().length() == 0) {
-            throw new BadTittleException();
+         boolean invalidGenre = true;
+        for (String genre: movieGenres) {
+        	if (aStrings[3].equals(genre)) {
+        		
+        		invalidGenre = false;
+        		break;
+        		
+        	}
+        }
+        if (invalidGenre) {
+        	throw new BadGenreException();
         }
 
-        try {
+        
 
-        } catch (NumberFormatException e) {
-            throw new BadDurationException();
-        }
+       
 
     }
 
