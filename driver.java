@@ -113,6 +113,10 @@ public class driver {
         String [] movieRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
 
         //------------------------------
+        // Do we need to add something that verifies if each field is empty?
+        // like
+        // aStrings[0].trim().length()==0? for each?
+        
         try {
             if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
                 throw new BadYearException();
