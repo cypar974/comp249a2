@@ -172,11 +172,13 @@ public class driver {
         //------------------------------------------------
 
         for (int i = 7; i < aStrings.length; i++){
-            
+            if (aStrings[i].trim().length() == 0) {
+            throw new BadNameException();
+        }
             
         }
     
-       
+       //----------------------------------------------------
 
     }
 
