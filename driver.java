@@ -139,7 +139,7 @@ public class driver {
                 throw new BadDurationException("Invalid Duration. Missing the Duration in the field");
             } 
             else if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
-                throw new BadDurationException();
+                throw new BadDurationException("Invalid Duration. Duration should be between between 30 minutes to 300 minutes");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
