@@ -107,11 +107,12 @@ public class driver {
     public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
             BadRatingException, BadScoreException, BadYearException, BadTittleException, Exception {
 
-        String [] moviegenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror", "action", "documentary", "fantasy", "mystery",
+        String [] movieGenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror", "action", "documentary", "fantasy", "mystery",
     			"sci-fi", "family", "western", "romance", "thriller"};
 
         String [] movieRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
-        
+
+        //------------------------------
         try {
             if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
                 throw new BadYearException();
@@ -120,19 +121,22 @@ public class driver {
             throw new Exception(e.getMessage());
 
         }
+        //---------------------------------
         if (aStrings[1].trim().length() == 0) {
             throw new BadTittleException();
         }
-        
+
+        //---------------------------------------
         try {  
-            if (Integer.parseInt(aStrings[2]) < 30 || Integer.parseInt(aStrings[2]) > 300) {
+            if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
                 throw new BadDurationException();
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
         }
 
-         boolean invalidGenre = true;
+        //----------------------------------------
+        boolean invalidGenre = true;
         for (String genre: movieGenres) {
         	if (aStrings[3].equals(genre)) {
         		
@@ -145,8 +149,33 @@ public class driver {
         	throw new BadGenreException();
         }
 
-        
+        //---------------------------------------------
+        boolean invalidRating = true;
+        for( String rating: movieRatings) {
+            if (aStrings[4].equals(rating)){
+                invalidRating = false;
+                break;
+            }
+        }
+        if(invalidRating){
+            throw new BadRatingException();
+        }
+        //--------------------------------------------
+        try {  
+            if (Double.parseDouble(aStrings[5]) < 10.0 && Double.parseDouble(aStrings[5]) > 0.0) {
+                throw new BadDurationException();
+            }
+        } catch (NumberFormatException e) {
+            throw new Exception(e.getMessage());
+        }
 
+        //------------------------------------------------
+
+        for (int i = 7; i < aStrings.length; i++){
+            
+            
+        }
+    
        
 
     }
