@@ -165,6 +165,10 @@ public class driver {
         }
 
         //---------------------------------------------
+        if (aStrings[4].trim().length() == 0) {
+            throw new BadRatingException("Invalid Rating. Missing the Rating in the field");
+        }
+        
         boolean invalidRating = true;
         for( String rating: movieRatings) {
             if (aStrings[4].equals(rating)){
