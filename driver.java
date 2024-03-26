@@ -122,7 +122,7 @@ public class driver {
                 throw new BadYearException("Invalid Year. Missing the Year in the field");
             } 
             else if (Integer.parseInt(aStrings[0]) < 1990 || Integer.parseInt(aStrings[0]) > 1999) {
-                throw new BadYearException(");
+                throw new BadYearException("Invalid Year. Year must be from 1990 through 1999");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
@@ -130,12 +130,15 @@ public class driver {
         }
         //---------------------------------
         if (aStrings[1].trim().length() == 0) {
-            throw new BadTitleException();
+            throw new BadTitleException("Invalid Title. Missing the Title in the field");
         }
 
         //---------------------------------------
         try {  
-            if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
+            if (aStrings[2].trim().length() == 0) {
+                throw new BadDurationException("Invalid Duration. Missing the Duration in the field");
+            } 
+            else if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
                 throw new BadDurationException();
             }
         } catch (NumberFormatException e) {
@@ -143,6 +146,10 @@ public class driver {
         }
 
         //----------------------------------------
+        if (aStrings[3].trim().length() == 0) {
+            throw new BadTitleException("Invalid Genre. Missing the Genre in the field");
+        }
+        
         boolean invalidGenre = true;
         for (String genre: movieGenres) {
         	if (aStrings[3].equals(genre)) {
@@ -152,8 +159,9 @@ public class driver {
         		
         	}
         }
+         
         if (invalidGenre) {
-        	throw new BadGenreException();
+        	throw new BadGenreException("Invalid Genre. Genre is misspelled");
         }
 
         //---------------------------------------------
