@@ -1,11 +1,5 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.Scanner;
-import java.util.Arrays;
 
 public class driver {
     public static String[] fields2(String record_line) throws Exception {
@@ -107,9 +101,9 @@ public class driver {
     public static void movieChecker(String[] aStrings) throws BadDurationException, BadGenreException, BadNameException,
             BadRatingException, BadScoreException, BadYearException, BadTitleException, Exception {
 
-        String[] movieGenres = { "musical", "comedy", "animation", "adventure", "drama", "crime", "biography", "horror",
-                "action", "documentary", "fantasy", "mystery",
-                "sci-fi", "family", "western", "romance", "thriller" };
+        String[] movieGenres = { "Musical", "Comedy", "Animation", "Adventure", "Drama", "Crime", "Biography", "Horror",
+                "Action", "Documentary", "Fantasy", "Mystery",
+                "Sci-fi", "Family", "Western", "Romance", "Thriller" };
 
         String[] movieRatings = { "PG", "Unrated", "G", "R", "PG-13", "NC-17" };
 
@@ -133,13 +127,16 @@ public class driver {
             throw new BadTitleException("Invalid Title. Missing the Title in the field");
         }
 
-        // ---------------------------------------
+        // --------------------------------------- // Length
+
         try {
             if (aStrings[2].trim().length() == 0) {
+
                 throw new BadDurationException("Invalid Duration. Missing the Duration in the field");
-            } else if (Integer.parseInt(aStrings[2]) < 30 && Integer.parseInt(aStrings[2]) > 300) {
+            } else if (Integer.parseInt(aStrings[2]) < 30 || Integer.parseInt(aStrings[2]) > 300) {
+
                 throw new BadDurationException(
-                        "Invalid Duration. Duration should be between between 30 minutes to 300 minutes");
+                        "Invalid Duration. Duration should be between 30 minutes to 300 minutes");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
@@ -179,10 +176,11 @@ public class driver {
         if (invalidRating) {
             throw new BadRatingException("Invalid Rating. Rating is misspelled.");
         }
-        // --------------------------------------------
+        // -------------------------------------------- // Rating
+
         try {
-            if (Double.parseDouble(aStrings[5]) < 10.0 && Double.parseDouble(aStrings[5]) > 0.0) {
-                throw new BadDurationException();
+            if (Double.parseDouble(aStrings[5]) > 10.0 || Double.parseDouble(aStrings[5]) < 0.0) {
+                throw new BadRatingException("Invalid Rating. Rating should be between 0.0 and 10.00");
             }
         } catch (NumberFormatException e) {
             throw new Exception(e.getMessage());
@@ -201,8 +199,25 @@ public class driver {
 
     }
 
+    public static void doPartOne(String[] movie) throws IOException { // Filing the line
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(movie[3].toLowerCase()).append(".csv");
+        try {
+            PrintWriter FileWriter = new PrintWriter(new FileOutputStream(stringBuilder.toString(), true));
+            for (int i = 0; i < 10; i++) {
+                FileWriter.print(movie[i]);
+                if (i != 9) {
+                    FileWriter.print(",");
+                }
+            }
+            FileWriter.print("\r");
+            FileWriter.close();
+        } catch (IOException ex) {
+            System.err.println("Error writing to crime.txt: " + ex.getMessage());
+        }
+    }
+
     public static void CSVReader(String fileName) {
-        System.out.println("asdsda");
         try {
             Scanner scanner = new Scanner(new File(fileName));
             while (scanner.hasNextLine()) {
@@ -210,14 +225,14 @@ public class driver {
                 try {
                     String[] a = fields2(line);
                     movieChecker(a);
-                    // PUT TO THE CORRESPONDING FILE
+                    doPartOne(a);
 
                 } catch (Exception e) {
                     System.out.println(
                             "------------------------------------\n\r" + e
                                     + "\n\r------------------------------------\n\r");
                     try {
-                        PrintWriter badFileWriter = new PrintWriter(new FileOutputStream("bad.txt", true));
+                        PrintWriter badFileWriter = new PrintWriter(new FileOutputStream("bad_movie_record.txt", true));
                         badFileWriter.println(line);
                         badFileWriter.close();
                     } catch (IOException ex) {
@@ -232,7 +247,13 @@ public class driver {
         }
     }
 
+    public static void do_part1(String fileName) {
+
+    }
+
     public static void main(String[] args) {
+        String part1_manifest = "part1_manifest.txt";
+        String part2_manifest = do_part1(part1_manifest);
         String filePath = "Movies1990.csv";
         CSVReader(filePath);
     }
