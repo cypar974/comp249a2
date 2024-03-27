@@ -5,16 +5,65 @@ import java.util.Scanner;
 public class driver {
 
     public static String[] genresSeen = {};
-    public static Movie[] aMoviesBefore = {};
-    public static Movie[] aMoviesAfter = {};
+    public static Movie[] aMovies = {};
+    public static Movie[][] allMovies = {};
+    public static int cursor = 0;
+    public static int localCursor = 0;
+
+    public static void do_part3(String fileInputName) {
+        int numGenres = genresSeen.length;
+        allMovies = new Movie[numGenres][];
+
+        try (BufferedReader br = new BufferedReader(new FileReader(fileInputName))) {
+            String fileName;
+            int genreIndex = 0;
+            while ((fileName = br.readLine()) != null) {
+                allMovies[genreIndex] = deserializeMovies(fileName);
+                genreIndex++;
+            }
+        } catch (IOException e) {
+            System.err.println("Error reading file part3_manifest.txt: " + e.getMessage());
+        }
+    }
+
+    private static Movie[] deserializeMovies(String fileName) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName))) {
+            return (Movie[]) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Error deserializing file " + fileName + ": " + e.getMessage());
+            return new Movie[0]; // Return an empty array if deserialization fails
+        }
+    }
+
+    public static void aMoviesCleaner() {
+        aMovies = new Movie[0];
+    }
+
+    public static void part3manifestMaker() {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("part3_manifest.txt"))) {
+            int count = 0;
+            for (String genre : genresSeen) {
+                writer.write(genre.toLowerCase() + ".ser");
+                if (++count < genresSeen.length) {
+                    writer.newLine(); // Add a new line if it's not the last genre
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error writing to file: " + e.getMessage());
+        }
+    }
 
     public static String do_part2(String fileName) {
-
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
+
             while ((line = br.readLine()) != null) {
+                String serFileName = line.substring(0, line.length() - 4);
                 aMoviesMaker(line);
+                serializeArray(serFileName);
+                aMoviesCleaner();
             }
+            part3manifestMaker();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -22,10 +71,10 @@ public class driver {
     }
 
     public static void aMoviesAdder(Movie m) {
-        Movie[] newArray = new Movie[aMoviesBefore.length + 1];
-        System.arraycopy(aMoviesBefore, 0, newArray, 0, aMoviesBefore.length);
+        Movie[] newArray = new Movie[aMovies.length + 1];
+        System.arraycopy(aMovies, 0, newArray, 0, aMovies.length);
         newArray[newArray.length - 1] = m;
-        aMoviesBefore = newArray;
+        aMovies = newArray;
     }
 
     public static void aMoviesMaker(String fileName) {
@@ -46,10 +95,12 @@ public class driver {
         }
     }
 
-    public static void serializeArray() {
-    }
-
-    public static void deSerializeArray() {
+    public static void serializeArray(String serFileName) {
+        try (ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream(serFileName + ".ser"))) {
+            outputStream.writeObject(aMovies);
+        } catch (IOException e) {
+            System.err.println("Error serializing movies: " + e.getMessage());
+        }
     }
 
     public static void part2manifestMaker() {
@@ -61,7 +112,6 @@ public class driver {
                     writer.newLine(); // Add a new line if it's not the last genre
                 }
             }
-            System.out.println("Genres written to file successfully.");
         } catch (IOException e) {
             System.err.println("Error writing to file: " + e.getMessage());
         }
@@ -206,7 +256,7 @@ public class driver {
                         "Invalid Duration. Duration should be between 30 minutes to 300 minutes");
             }
         } catch (NumberFormatException e) {
-            throw new Exception(e.getMessage());
+            throw new BadDurationException("Invalid Duration. Not a number.");
         }
 
         // ---------------------------------------- Genre
@@ -249,10 +299,10 @@ public class driver {
             if (aStrings[5].trim().length() == 0) {
                 throw new BadRatingException("Invalid Rating. Missing the Rating in the field");
             } else if (Double.parseDouble(aStrings[5]) > 10.0 || Double.parseDouble(aStrings[5]) < 0.0) {
-                throw new BadRatingException("Invalid Rating. Rating should be between 0.0 and 10.00");
+                throw new BadRatingException("Invalid Rating. Rating grade should be between 0.0 and 10.00");
             }
         } catch (NumberFormatException e) {
-            throw new Exception(e.getMessage());
+            throw new BadRatingException("Invalid Rating. Rating grade should be a number");
         }
 
         // ------------------------------------------------ Names
@@ -336,10 +386,96 @@ public class driver {
         return "part2_manifest.txt";
     }
 
+    public static void menu() {
+        Scanner input = new Scanner(System.in);
+        boolean breakLoop = false;
+
+        while (!breakLoop) {
+            System.out.print(
+                    "--------------------------\r\n\tMain MENU\r\n--------------------------\r\n\r  s  Select a movie array to navigate\r\n  n  Navigate to "
+                            + genresSeen[cursor] + " movies (" + allMovies[cursor].length
+                            + " records)\r\n  x  Exit\r\n--------------------------\r\n\r\nEnter your choice: ");
+
+            String choice = input.nextLine();
+            switch (choice) {
+                case "s":
+                    System.out.println(
+                            "\r\n--------------------------\r\n    Genre Sub-Menu\r\n--------------------------\r\n\r");
+                    for (int i = 0; i < genresSeen.length; i++) {
+                        System.out.println(
+                                (i + 1) + "  " + genresSeen[i] + "\t\t" + "(" + allMovies[i].length
+                                        + " movies)");
+                    }
+                    System.out.print("\r\n--------------------------\r\nEnter your choice: ");
+                    int newCursorMain = input.nextInt();
+                    @SuppressWarnings("unused")
+                    String buffer = input.nextLine();
+                    cursor = newCursorMain - 1;
+                    localCursor = 0;
+                    break;
+                case "x":
+                    breakLoop = true;
+                    break;
+                case "n":
+                    System.out
+                            .println("Navigating " + genresSeen[cursor] + " movies (" + allMovies[cursor].length + ")");
+                    System.out.print("Enter your choice: ");
+                    int choiceN = input.nextInt();
+                    buffer = input.nextLine();
+                    int decalage = Math.abs(choiceN) - 1;
+                    switch (choiceN) {
+                        case 0:
+                            System.out.println("\r\nGoing back to main menu...\r\n");
+                            break;
+                        default:
+
+                            if (choiceN < 0) {
+                                int newCursor = localCursor - decalage;
+                                System.out.println("\r\n" + allMovies[cursor][localCursor].getTitle());
+                                if (newCursor == localCursor) {
+                                    break;
+                                }
+                                if (newCursor < 0) {
+                                    System.out.println("BOF has been reached.");
+                                    newCursor = 0;
+                                }
+                                for (int i = localCursor - 1; i >= newCursor; i--) {
+                                    System.out.println(allMovies[cursor][i].getTitle());
+                                }
+                                localCursor = newCursor;
+                                break;
+                            }
+                            int newCursor = localCursor + decalage;
+                            System.out.println("\r\n" + allMovies[cursor][localCursor].getTitle());
+                            if (newCursor == localCursor) {
+                                break;
+                            }
+                            if (newCursor > allMovies[cursor].length - 1) {
+                                newCursor = allMovies[cursor].length - 1;
+                                System.out.println("EOF has been reached.");
+                            }
+                            for (int i = localCursor + 1; i <= newCursor; i++) {
+                                System.out.println(allMovies[cursor][i].getTitle());
+                            }
+                            localCursor = newCursor;
+                            break;
+
+                    }
+                    break;
+                default:
+                    System.out.println("\r\nWrong input...\r\n");
+                    break;
+            }
+        }
+        System.out.println("Thank you for using our system. See you next time.");
+        input.close();
+    }
+
     public static void main(String[] args) {
         String part1_manifest = "part1_manifest.txt";
         String part2_manifest = do_part1(part1_manifest);
-        @SuppressWarnings("unused")
         String part3_manifest = do_part2(part2_manifest);
+        do_part3(part3_manifest);
+        menu();
     }
 }

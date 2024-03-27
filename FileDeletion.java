@@ -6,7 +6,10 @@ public class FileDeletion {
         String[] filesToDelete = { "musical.csv", "comedy.csv", "animation.csv", "adventure.csv", "drama.csv",
                 "crime.csv", "biography.csv", "horror.csv", "action.csv", "documentary.csv", "fantasy.csv",
                 "mystery.csv", "sci-fi.csv", "family.csv", "western.csv", "romance.csv", "thriller.csv",
-                "bad_movie_record.txt", "part2_manifest.txt" };
+                "bad_movie_record.txt", "part2_manifest.txt", "musical.ser", "comedy.ser", "animation.ser",
+                "adventure.ser", "drama.ser", "crime.ser", "biography.ser", "horror.ser", "action.ser",
+                "documentary.ser", "fantasy.ser", "mystery.ser", "sci-fi.ser", "family.ser", "western.ser",
+                "romance.ser", "thriller.ser", "part3_manifest.txt" };
 
         // Iterate through each file name and delete the corresponding file
         for (String fileName : filesToDelete) {
