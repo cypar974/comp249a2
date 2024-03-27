@@ -3,8 +3,10 @@ import java.io.File;
 public class FileDeletion {
     public static void main(String[] args) {
         // Array of file names to delete
-        String[] filesToDelete = { "action.csv", "adventure.csv", "biography.csv", "comedy.csv",
-                "crime.csv", "drama.csv", "fantasy.csv", "bad_movie_record.txt" };
+        String[] filesToDelete = { "musical.csv", "comedy.csv", "animation.csv", "adventure.csv", "drama.csv",
+                "crime.csv", "biography.csv", "horror.csv", "action.csv", "documentary.csv", "fantasy.csv",
+                "mystery.csv", "sci-fi.csv", "family.csv", "western.csv", "romance.csv", "thriller.csv",
+                "bad_movie_record.txt" };
 
         // Iterate through each file name and delete the corresponding file
         for (String fileName : filesToDelete) {
@@ -26,8 +28,6 @@ public class FileDeletion {
             } else {
                 System.out.println("Failed to delete: " + fileName);
             }
-        } else {
-            System.out.println("File not found: " + fileName);
         }
     }
 }

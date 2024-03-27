@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.Scanner;
 
 public class driver {
+
     public static String[] fields2(String record_line) throws Exception {
         boolean hasInvComa = false;
         for (int i = 0; i < record_line.length(); i++) {
@@ -247,8 +248,16 @@ public class driver {
         }
     }
 
-    public static void do_part1(String fileName) {
-
+    public static String do_part1(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                CSVReader(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "part2_manifest.txt";
     }
 
     public static void main(String[] args) {
