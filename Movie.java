@@ -177,6 +177,7 @@ public class Movie implements Serializable {
 
 		return ("Year: " + year + ", " +
 				"Title: " + title + ", " +
+				"Genre: " + genre + ", " +
 				"Duration: " + duration + ", " +
 				"Rating: " + rating + ", " +
 				"Score: " + score + ", " +
